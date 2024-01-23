@@ -11,19 +11,25 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
+import { usePathname } from "next/navigation";
 
 type Props = {};
 
 export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const onlyWidth = useWindowWidth();
+  const pathname = usePathname();
   const mobileSize = onlyWidth < 768;
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
-    <div className=" relative min-w-[80px] border-r px-3 pb-10 pt-24">
+    <div
+      className={`relative min-w-[80px] md:min-w-[250px] border-r px-3 pb-10 pt-24 ${
+        isCollapsed && "md:min-w-[80px]"
+      }`}
+    >
       {!mobileSize && (
         <div className="absolute top-3 right-[-20px]">
           <Button
@@ -61,6 +67,18 @@ export default function SideNavbar({}: Props) {
             href: "/products",
             icon: GanttChartSquare,
             variant: "ghost",
+            subMenu: [
+              {
+                title: "Gestion des produits",
+                href: "productsManagement",
+                variant: "ghost",
+              },
+              {
+                title: "Modifier les produits",
+                href: "editProduct",
+                variant: "ghost",
+              },
+            ],
           },
           {
             title: "Parametre",

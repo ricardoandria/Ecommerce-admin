@@ -14,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { log } from "console";
 import { Howl, Howler } from "howler";
 
 const cardData: CardProps[] = [
@@ -72,8 +71,8 @@ const uesrSalesData: SalesProps[] = [
 ];
 
 const sound = new Howl({
-  src: ["sound.mp3"], // Provide the path to your sound file
-  volume: 1, // Adjust the volume as needed
+  src: ["sound.mp3"],
+  volume: 1,
 });
 
 const playSound = () => {
@@ -84,8 +83,8 @@ export default function Home() {
   const { setTheme, theme } = useTheme();
 
   const handleChangeTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light"); // Toggle between light and dark themes
-    playSound(); // Play the sound effect
+    setTheme(theme === "light" ? "dark" : "light");
+    playSound();
   };
 
   return (

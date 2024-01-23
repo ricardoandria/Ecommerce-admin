@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { ChevronDown, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import {
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -22,12 +24,33 @@ interface NavProps {
     icon: LucideIcon;
     variant: "default" | "ghost";
     href: string;
+    subMenu?: {
+      title?: string;
+      label?: string;
+      icon?: LucideIcon;
+      variant?: "default" | "ghost";
+      href: string;
+    }[];
   }[];
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathName = usePathname();
   const { theme } = useTheme();
+  const [submenuToggle, setSubmenuToggle] = useState(false);
+
+  const toggleSubMenu = () => {
+    setSubmenuToggle(!submenuToggle);
+  };
+  useEffect(() => {
+    if (
+      pathName === "/products/productsManagement" ||
+      pathName === "/products/editProduct"
+    ) {
+      setSubmenuToggle(true);
+    }
+  }, [pathName]);
+
   return (
     <TooltipProvider>
       <div
@@ -70,33 +93,103 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 </TooltipContent>
               </Tooltip>
             ) : (
-              <Link
-                key={index}
-                href={link.href}
-                className={cn(
-                  buttonVariants({
-                    variant: link.href === pathName ? "default" : "ghost",
-                    size: "sm",
-                  }),
-                  link.variant === "default" &&
-                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                  "justify-start"
-                )}
-              >
-                <link.icon className="mr-2 h-4 w-4" />
-                {link.title}
-                {link.label && (
-                  <span
-                    className={cn(
-                      "ml-auto",
-                      link.variant === "default" &&
-                        "text-background dark:text-white"
-                    )}
+              <>
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={cn(
+                    buttonVariants({
+                      variant: link.href === pathName ? "default" : "ghost",
+                      size: "sm",
+                    }),
+                    link.variant === "default" &&
+                      "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                    "justify-start transition-all duration-300 delay-300"
+                  )}
+                >
+                  <div
+                    className="flex items-center justify-between w-full transition-all duration-300 delay-300"
+                    onClick={toggleSubMenu}
                   >
-                    {link.label}
-                  </span>
-                )}
-              </Link>
+                    <div className="flex items-center ">
+                      <link.icon className="mr-2 h-4 w-4" />
+                      {link.title}
+                    </div>
+                    {link.subMenu ? (
+                      <ChevronDown
+                        className={` ${
+                          submenuToggle
+                            ? "transition-all duration-150 delay-150"
+                            : "-rotate-90 transition-all duration-300 delay-300"
+                        } `}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+
+                  {link.label && (
+                    <span
+                      className={cn(
+                        "ml-auto",
+                        link.variant === "default" &&
+                          "text-background dark:text-white"
+                      )}
+                    >
+                      {link.label}
+                    </span>
+                  )}
+                </Link>
+                <AnimatePresence>
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 105 },
+                      visible: { opacity: 1.5, y: 0 },
+                    }}
+                    initial={submenuToggle ? "visible" : "hidden"}
+                    animate={submenuToggle ? "visible" : "hidden"}
+                    className="w-10"
+                  >
+                    {link.subMenu && submenuToggle
+                      ? link.subMenu.map((item, i) => (
+                          <Link
+                            key={i}
+                            href={link.href + "/" + item.href}
+                            className={cn(
+                              buttonVariants({
+                                variant:
+                                  link.href + "/" + item.href === pathName
+                                    ? "default"
+                                    : "ghost",
+                                size: "sm",
+                              }),
+                              item.variant === "default" &&
+                                "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                              "justify-start ml-6 "
+                            )}
+                          >
+                            <div className="flex gap-1 items-center">
+                              <div className=" w-2 h-2 bg-[#0c142c] rounded-full"></div>
+                              {item.title}
+                            </div>
+
+                            {item.label && (
+                              <span
+                                className={cn(
+                                  "ml-auto",
+                                  link.variant === "default" &&
+                                    "text-background dark:text-white"
+                                )}
+                              >
+                                {item.label}
+                              </span>
+                            )}
+                          </Link>
+                        ))
+                      : ""}
+                  </motion.div>
+                </AnimatePresence>
+              </>
             )
           )}
         </nav>
