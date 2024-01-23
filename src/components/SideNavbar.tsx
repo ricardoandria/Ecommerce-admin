@@ -67,18 +67,6 @@ export default function SideNavbar({}: Props) {
             href: "/products",
             icon: GanttChartSquare,
             variant: "ghost",
-            subMenu: [
-              {
-                title: "Gestion des produits",
-                href: "productsManagement",
-                variant: "ghost",
-              },
-              {
-                title: "Modifier les produits",
-                href: "editProduct",
-                variant: "ghost",
-              },
-            ],
           },
           {
             title: "Parametre",

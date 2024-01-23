@@ -37,8 +37,8 @@ const Header: React.FC<headerProps> = ({ title }) => {
   };
   return (
     <div className="w-full">
-      <div className="flex items-end justify-between ">
-        <h2 className=" text-2xl font-semibold">{title}</h2>
+      <div className="flex justify-between ">
+        <h2 className=" text-sm md:text-2xl font-semibold">{title}</h2>
         <div className="flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -78,8 +78,8 @@ const Header: React.FC<headerProps> = ({ title }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-between items-center md:flex-row">
-        <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex flex-col justify-between lg:items-center lg:flex-row">
+        <div className="bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <form>
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -90,7 +90,7 @@ const Header: React.FC<headerProps> = ({ title }) => {
         <div
           className={` ${
             theme === "dark" ? "bg-white" : "bg-[#0c142c]"
-          } px-4 py-2 w-[300px] rounded-sm text-center`}
+          } px-4 py-2 w-full lg:w-[300px] rounded-sm text-center`}
         >
           <h2
             className={`${theme === "dark" ? "text-[#0c142c]" : "text-white"}`}
