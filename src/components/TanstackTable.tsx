@@ -13,10 +13,12 @@ import { PRODUCTS } from "../data";
 import { DeleteIcon } from "lucide-react";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 const TanStackTable = () => {
   const [data] = useState(() => [...PRODUCTS]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const { theme } = useTheme();
   const columnHelper = createColumnHelper();
 
   const columns: any = [
@@ -101,15 +103,17 @@ const TanStackTable = () => {
   });
 
   return (
-    <div className="max-w-[600px] md:max-w-[450px] lg:max-w-full  mx-auto text-white overflow-scroll lg:overflow-hidden ">
-      <table className="border  w-full text-left">
+    <div className="max-w-[450px] sm:max-w-[470px] md:max-w-[600px] lg:max-w-full  mx-auto  overflow-scroll lg:overflow-hidden ">
+      <table className={`border  w-full text-left`}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="capitalize px-3.5 py-2 text-black"
+                  className={`capitalize px-3.5 py-2 text-black ${
+                    theme !== "light" ? "text-white" : "text-black"
+                  }`}
                 >
                   {flexRender(
                     header.column.columnDef.header,
@@ -125,7 +129,12 @@ const TanStackTable = () => {
             table.getRowModel().rows.map((row, i) => (
               <tr key={row.id} className="text-black">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-3.5 py-2">
+                  <td
+                    key={cell.id}
+                    className={`px-3.5 py-2 ${
+                      theme !== "light" ? "text-white" : "text-black"
+                    }`}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -145,7 +154,9 @@ const TanStackTable = () => {
             table.previousPage();
           }}
           disabled={!table.getCanPreviousPage()}
-          className="p-1 border text-black border-gray-300 px-2 disabled:opacity-30"
+          className={`p-1 border  border-gray-300 px-2 disabled:opacity-30 ${
+            theme !== "light" ? "text-white" : "text-black"
+          }`}
         >
           {"<"}
         </button>
@@ -154,21 +165,28 @@ const TanStackTable = () => {
             table.nextPage();
           }}
           disabled={!table.getCanNextPage()}
-          className="p-1 border text-black border-gray-300 px-2 disabled:opacity-30"
+          className={`p-1 border  border-gray-300 px-2 disabled:opacity-30 ${
+            theme !== "light" ? "text-white" : "text-black"
+          }`}
         >
           {">"}
         </button>
 
         <span className="flex items-center gap-1">
-          <div className="text-black">Page</div>
-          <strong className="text-black">
+          <div className={`${theme !== "light" ? "text-white" : "text-black"}`}>
+            Page
+          </div>
+          <strong
+            className={`${theme !== "light" ? "text-white" : "text-black"}`}
+          >
             {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </strong>
         </span>
         <span
-          className="flex items-center gap-1 text-black
-        "
+          className={`flex items-center gap-1${
+            theme !== "light" ? "text-white" : "text-black"
+          }`}
         >
           | Go to page:
           <input

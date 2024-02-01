@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import React from "react";
 
 export type CardProps = {
@@ -10,13 +11,28 @@ export type CardProps = {
 };
 
 const Card = (props: CardProps) => {
+  const { theme } = useTheme();
   return (
     <CardContent>
       <section className="flex justify-between gap-2">
-        <p className=" text-sm">{props.label}</p>
-        <props.icon className="h-4 w-4 text-gray-400" />
+        <p
+          className={`text-sm ${
+            theme !== "light" ? "text-white" : "text-black"
+          }`}
+        >
+          {props.label}
+        </p>
+        <props.icon
+          className={`${theme !== "light" ? "text-white" : "text-black"} h-4
+          w-4
+          text-gray-400`}
+        />
       </section>
-      <section className="flex flex-col gap-1">
+      <section
+        className={`${
+          theme !== "light" ? "text-white" : "text-black"
+        } flex flex-col gap-1`}
+      >
         <h2 className=" text-2xl font-semibold">{props.amount}</h2>
         <p className="text-xs text-gray-500">{props.description}</p>
       </section>

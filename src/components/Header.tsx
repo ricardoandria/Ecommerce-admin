@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +15,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
+import DropDownProfile from "./DropDownProfile";
 
 interface headerProps {
   title?: string;
+  inputSearch?: boolean;
 }
 const sound = new Howl({
   src: ["sound.mp3"],
@@ -28,15 +30,40 @@ const playSound = () => {
   sound.play();
 };
 
-const Header: React.FC<headerProps> = ({ title }) => {
+const Header: React.FC<headerProps> = ({ title, inputSearch }) => {
   const { setTheme, theme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleChangeTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
     playSound();
   };
+
+  const handleToggleDropDown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !(dropdownRef.current as unknown as HTMLDivElement).contains(
+        event.target as Node
+      )
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-2">
       <div className="flex justify-between ">
         <h2 className=" text-sm md:text-2xl font-semibold">{title}</h2>
         <div className="flex items-center gap-4">
@@ -63,8 +90,8 @@ const Header: React.FC<headerProps> = ({ title }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="w-[40px] h-[40px] rounded-full ">
-            <Link href="/profile">
+          <div className="w-[40px] h-[40px] rounded-full cursor-pointer">
+            <div onClick={handleToggleDropDown}>
               <Image
                 src={
                   "https://buffer.com/resources/content/images/resources/wp-content/uploads/2015/03/adjust-tie.jpeg"
@@ -74,23 +101,32 @@ const Header: React.FC<headerProps> = ({ title }) => {
                 alt="pdp"
                 className="w-[40px] h-[40px] rounded-full border border-gray-600 border-2 object-cover"
               />
-            </Link>
+            </div>
+            <DropDownProfile isOpen={isOpen} refDropDown={dropdownRef} />
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-between lg:items-center lg:flex-row">
-        <div className="bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <form>
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search" className="pl-8" />
-            </div>
-          </form>
-        </div>
+      <div
+        className={`flex flex-col justify-between  ${
+          inputSearch === false
+            ? " justify-end items-end"
+            : "lg:flex-row lg:items-center"
+        }`}
+      >
+        {inputSearch && (
+          <div className="bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <form>
+              <div className="relative lg:w-[300px]">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search" className="pl-8" />
+              </div>
+            </form>
+          </div>
+        )}
         <div
           className={` ${
-            theme === "dark" ? "bg-white" : "bg-[#0c142c]"
-          } px-4 py-2 w-full lg:w-[300px] rounded-sm text-center`}
+            theme !== "light" ? "bg-white" : "bg-[#0c142c]"
+          } px-4 py-2 w-full lg:w-[300px] rounded-sm text-center `}
         >
           <h2
             className={`${theme === "dark" ? "text-[#0c142c]" : "text-white"}`}

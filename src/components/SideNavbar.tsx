@@ -8,6 +8,7 @@ import {
   GanttChartSquare,
   Settings,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -19,25 +20,25 @@ export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const onlyWidth = useWindowWidth();
   const pathname = usePathname();
-  const mobileSize = onlyWidth < 768;
+  const mobileSize = onlyWidth < 992;
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
     <div
-      className={`relative min-w-[80px] md:min-w-[250px] border-r px-3 pb-10 pt-24 ${
-        isCollapsed && "md:min-w-[80px]"
+      className={`relative min-w-[80px] md:min-w-[80px] lg:min-w-[200px]  border-r px-3 pb-10 pt-24 ${
+        isCollapsed && "lg:min-w-[80px]"
       }`}
     >
       {!mobileSize && (
-        <div className="absolute top-3 right-[-20px]">
+        <div className="absolute top-3 right-[-20px] transition-all duration-300 delay-300">
           <Button
             variant="secondary"
             className=" rounded-full p-2 "
             onClick={toggleSidebar}
           >
-            <ChevronRight />
+            {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </Button>
         </div>
       )}

@@ -15,6 +15,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Howl, Howler } from "howler";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header";
 
 const cardData: CardProps[] = [
   {
@@ -94,28 +97,7 @@ export default function Home() {
       }`}
     >
       <div className="flex justify-between items-center">
-        <PageTitle title="Dashboard" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-              <SunIcon
-                className={`h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 `}
-              />
-              <MoonIcon
-                className={`absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 `}
-              />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={handleChangeTheme}>
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleChangeTheme}>
-              Dark
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Header title="Dashboard" inputSearch={true} />
       </div>
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
         {cardData.map((items, index) => (

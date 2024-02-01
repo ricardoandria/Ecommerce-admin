@@ -15,16 +15,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTheme } from "next-themes";
+import { MouseEventHandler, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onClick: MouseEventHandler;
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  onClick,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { theme } = useTheme();
+  const [toggleModal, setToggleModal] = useState(false);
+
   const table = useReactTable({
     data,
     columns,
@@ -33,7 +40,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <Table className={`${theme !== "light" ? "text-white" : "text-black"}`}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -58,6 +65,8 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={onClick}
+                className="cursor-pointer text-black"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

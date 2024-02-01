@@ -44,7 +44,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
           theme === "dark" ? "text-white" : "text-black"
         }`}
       >
-        <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+        <nav className="grid gap-1 group-[[data-collapsed=true]]:justify-center  group-[[data-collapsed=true]]:px-2">
           {links.map((link, index) =>
             isCollapsed ? (
               <Tooltip key={index} delayDuration={0}>
@@ -61,7 +61,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
-                    <link.icon className="h-4 w-4" />
+                    <link.icon className="h-4  w-4" />
                     <span className="sr-only">{link.title}</span>
                   </Link>
                 </TooltipTrigger>
@@ -92,14 +92,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     "justify-start transition-all duration-300 delay-300"
                   )}
                 >
-                  <div
-                    className="flex items-center justify-between w-full transition-all duration-300 delay-300"
-                    onClick={toggleSubMenu}
-                  >
-                    <div className="flex items-center ">
-                      <link.icon className="mr-2 h-4 w-4" />
-                      {link.title}
-                    </div>
+                  <div className="flex items-center">
+                    <link.icon className="mr-2  h-4 w-4" />
+                    {link.title}
                   </div>
 
                   {link.label && (
