@@ -14,12 +14,22 @@ import { DeleteIcon } from "lucide-react";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const TanStackTable = () => {
-  const [data] = useState(() => [...PRODUCTS]);
+  // const [data] = useState(() => [...PRODUCTS]);
   const [globalFilter, setGlobalFilter] = useState("");
   const { theme } = useTheme();
   const columnHelper = createColumnHelper();
+
+  const { isFetching, error, data } = useQuery({
+    queryKey: ["Products"],
+    queryFn: async () => {
+      const response = await axios.get("http://127.0.0.1:5000/produit/");
+      return response.data;
+    },
+  });
 
   const columns: any = [
     columnHelper.accessor("", {
@@ -90,7 +100,6 @@ const TanStackTable = () => {
       header: "Actions",
     },
   ];
-
   const table = useReactTable({
     data,
     columns,

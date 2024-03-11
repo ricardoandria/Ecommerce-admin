@@ -18,6 +18,9 @@ import TanStackTable from "@/components/TanstackTable";
 import ProductModal from "@/components/ProductModal";
 import { useTheme } from "next-themes";
 
+import { useGetProduct } from "@/hooks/api/Product/useGetProduct";
+import { ProductTable } from "@/components/Table";
+
 type Props = {};
 type ProductType = {
   image: JSX.Element;
@@ -32,6 +35,7 @@ type ProductType = {
 const Products = (props: Props) => {
   const [toogleModal, setToogleModal] = useState(false);
   const { theme } = useTheme();
+  const { data: products, isLoading } = useGetProduct();
 
   const handleToggleModal = () => {
     setToogleModal(!toogleModal);
@@ -78,7 +82,7 @@ const Products = (props: Props) => {
         </Select>
       </div>
       <div className="mt-4">
-        <TanStackTable />
+        <ProductTable />
       </div>
       <ProductModal toggle={toogleModal} onClose={onClose} />
     </div>

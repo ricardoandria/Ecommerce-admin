@@ -1,8 +1,10 @@
 import { X } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useForm, Resolver } from "react-hook-form";
+import { useForm, Resolver, SubmitHandler } from "react-hook-form";
 import { Label } from "@/components/ui/label";
+import { useAddProduct } from "@/hooks/api/Product/useAddProduct";
+import { Product } from "@/hooks/api/Product/type";
 
 type Props = {
   toggle: boolean;
@@ -10,9 +12,9 @@ type Props = {
 };
 
 type FormValues = {
-  nom: string;
-  prix: string;
-  stock: number;
+  name: string;
+  price: string;
+  stock: string;
   categorie: string;
   image: FileList;
 };
@@ -20,7 +22,7 @@ type FormValues = {
 const ProductModal = ({ toggle, onClose }: Props) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { theme } = useTheme();
   const {
@@ -29,13 +31,13 @@ const ProductModal = ({ toggle, onClose }: Props) => {
     setValue,
     formState: { errors },
   } = useForm<FormValues>();
-  const [selectedCategory, setSelectedCategory] = useState("Ordinateur");
-
+  // const [selectedCategory, setSelectedCategory] = useState("Ordinateur");
+  const { mutate } = useAddProduct();
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
-      setSelectedFile(file);
+      setSelectedFile(file.name);
       setValue("image", [file] as any);
       const reader = new FileReader();
 
@@ -47,7 +49,29 @@ const ProductModal = ({ toggle, onClose }: Props) => {
     }
   };
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
+    console.log(data);
+    const inputFile = document.getElementById("fileInput") as HTMLInputElement;
+
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("stock", data.stock);
+    formData.append("categorie", data.categorie);
+
+    if (selectedFile) {
+      formData.append("image", inputFile?.files?.item(0) as File);
+    }
+
+    console.log(formData);
+
+    // try {
+    //   await mutate(formData, { onSettled: onClose });
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  };
 
   return (
     <>
@@ -65,7 +89,7 @@ const ProductModal = ({ toggle, onClose }: Props) => {
             <X onClick={onClose} className="cursor-pointer" />
           </div>
           <form
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 justify-center mt-5 lg:flex-row"
           >
             <div className="flex  flex-col  w-full lg:w-1/2">
@@ -79,6 +103,7 @@ const ProductModal = ({ toggle, onClose }: Props) => {
                 Choose File
                 <input
                   type="file"
+                  id="fileInput"
                   {...register("image")}
                   ref={fileInputRef}
                   className="hidden"
@@ -101,13 +126,13 @@ const ProductModal = ({ toggle, onClose }: Props) => {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 md:flex-row lg:flex-col justify-center">
                   <input
-                    {...register("nom")}
-                    placeholder="Nom"
+                    {...register("name")}
+                    placeholder="name"
                     className="p-2 border border-gray-300 md:w-1/2 lg:w-full rounded focus:outline-none focus:border-2 focus:border-[#080c14]"
                   />
                   <input
-                    {...register("prix")}
-                    placeholder="Prix"
+                    {...register("price")}
+                    placeholder="price"
                     className="p-2 border border-gray-300 md:w-1/2 lg:w-full rounded focus:outline-none focus:border-2 focus:border-[#080c14]"
                   />
                 </div>

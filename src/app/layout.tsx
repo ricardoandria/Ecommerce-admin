@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import SideNavbar from "@/components/SideNavbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Provider } from "./providers/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,17 +25,19 @@ export default function RootLayout({
           "debug-screens": process.env.NODE_ENV === "development",
         })}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {/*Sidebar */}
-          <SideNavbar />
-          {/*Main page */}
-          <div className="p-8 w-full">{children}</div>
-        </ThemeProvider>
+        <Provider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/*Sidebar */}
+            <SideNavbar />
+            {/*Main page */}
+            <div className="p-8 w-full">{children}</div>
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );
