@@ -26,7 +26,7 @@ export const useMutation = <TParam, TResponse, TError = Error>(
             : "application/json",
           ...headers,
         },
-        body: JSON.stringify(data ?? {}),
+        body:isFormData ? (data as FormData) : JSON.stringify(data ?? {})
       });
       return await res.json();
     },

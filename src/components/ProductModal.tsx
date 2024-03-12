@@ -50,9 +50,6 @@ const ProductModal = ({ toggle, onClose }: Props) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
-    console.log(data);
-    const inputFile = document.getElementById("fileInput") as HTMLInputElement;
-
     const formData = new FormData();
 
     formData.append("name", data.name);
@@ -60,17 +57,17 @@ const ProductModal = ({ toggle, onClose }: Props) => {
     formData.append("stock", data.stock);
     formData.append("categorie", data.categorie);
 
+    console.log(data.image[0].name);
+
     if (selectedFile) {
-      formData.append("image", inputFile?.files?.item(0) as File);
+      formData.append("image", data.image[0].name);
     }
 
-    console.log(formData);
-
-    // try {
-    //   await mutate(formData, { onSettled: onClose });
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    try {
+      await mutate(formData, { onSettled: onClose });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -152,7 +149,6 @@ const ProductModal = ({ toggle, onClose }: Props) => {
                 <input
                   {...register("stock")}
                   placeholder="Stock"
-                  type="number"
                   className="p-2 border w-1/2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-[#080c14]"
                 />
               </div>
